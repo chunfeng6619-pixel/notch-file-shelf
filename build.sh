@@ -8,7 +8,7 @@ mkdir -p "$BUILD"
 clang -fobjc-arc -fmodules -Wall -Wextra \
   -Wno-unused-parameter -Wno-incompatible-pointer-types \
   -framework Cocoa -framework CoreGraphics -framework CoreAudio \
-  "$ROOT/src/main.m" -o "$BUILD/NotchShelf"
+  "$ROOT/main.m" -o "$BUILD/NotchShelf"
 
 if [ "${1:-}" = "--self-test" ]; then
   rm -rf "$BUILD/self-test"
@@ -30,7 +30,6 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BUILD/NotchShelf" "$APP/Contents/MacOS/NotchShelf"
 cp "$ROOT/Info.plist" "$APP/Contents/Info.plist"
-# Finder may create AppleDouble sidecars on external volumes; they are not app resources.
 find "$APP" -name '._*' -type f -delete
 codesign --force --sign - "$APP" >/dev/null
 printf 'Built %s\n' "$APP"
